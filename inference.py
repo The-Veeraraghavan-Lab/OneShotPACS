@@ -91,7 +91,6 @@ parser.add_argument('--roi_y', default=256, type=int, help='roi size in y direct
 parser.add_argument('--roi_z', default=64, type=int, help='roi size in z direction')
 parser.add_argument('--RandFlipd_prob', default=0.45, type=float, help='RandFlipd aug probability')
 parser.add_argument('--RandRotate90d_prob', default=0.2, type=float, help='RandRotate90d aug probability')
-parser.add_argument('--RandScaleIntensityd_prob', default=0.1, type=float, help='RandScaleIntensityd aug probability')
 parser.add_argument('--RandShiftIntensityd_prob', default=0.1, type=float, help='RandShiftIntensityd aug probability')
 parser.add_argument('--workers', default=1, type=int, help='number of workers')
 
