@@ -10,7 +10,7 @@
 
 ## To get started
 - Clone this repository
-- Download the corresponding weights from <a href="https://mskcc.box.com/s/x4ilt7xc69s47bu81zqynos39xj4r0zw">here</a> and save them to `saved_weights` folder
+- Download the corresponding weights from <a href="https://mskcc.box.com/s/x4ilt7xc69s47bu81zqynos39xj4r0zw">here</a> and save them to `saved_weights` folder inside `sv_dir`
 - Install the requirements using `pip install -r requirements.txt`
 - Run the script using
   ```bash
