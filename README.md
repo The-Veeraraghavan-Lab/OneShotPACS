@@ -15,15 +15,15 @@
 - Run the script using
   ```bash
   python inference.py
-  ——reg_model ‘VoxelMorph’ -—seg_model ‘CLSTM’ -—gpu 0 -—batch_size 1\
+  ——reg_model VoxelMorph -—seg_model CLSTM -—gpu 0 -—batch_size 1\
   —-sv_dir {savedir} --val_dir {valdir} --results_file {resultsfile} \
-  --reg_weights 'saved_weights/0190_reg.pt' \
-  --seg_weights 'saved_weights/0190_seg.pt' \
+  --reg_weights saved_weights/0190_reg.pt \
+  --seg_weights saved_weights/0190_seg.pt \
   --flown 8 -—data_dir {datadir} —-json_list {list of jsons}
   —-a_min -500 —-a_max 500 —-b_min 0.0 —-b_max 1.0 \
   —-space_x 1.5 —-space_y 1.5 —-space_z 1.5 \
   —-roi_x 256 —-roi_y 256 —-roi_z 64 \
-  —-RandFlip_prob 0.45 —-RandRotate90d_prob 0.2
+  —-RandFlip_prob 0.45 —-RandRotate90d_prob 0.2 \
   —-RandShiftIntensityd_prob 0.1 —-workers 1
   ```
   
