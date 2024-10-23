@@ -42,8 +42,6 @@ from utils_metrics import Eval
 parser = argparse.ArgumentParser()
 
 # data organization parameters
-#parser.add_argument('--atlas', help='atlas filename (default: data/atlas_norm.npz)')
-#parser.add_argument('--multichannel', action='store_true', help='specify that data has multiple channels')
 parser.add_argument('--affine', action='store_true', help='Add Affine rotations to the input images')
 parser.add_argument('--rotate', default='0.0', help='Rotation in degrees to apply to affine transform')
 parser.add_argument('--trans', default='0', help='Translation in voxel size to apply to affine transform')
@@ -58,8 +56,6 @@ parser.add_argument('--seg_weights', default='saved_weights/sv_seg_model_cbct.pt
 parser.add_argument('--cudnn-nondet',  action='store_true', help='disable cudnn determinism - might slow down training')
 
 # network architecture parameters
-#parser.add_argument('--reg_config', type=str, default='TransMorph-Large_SSIM_pre_train_128_middle_bias_True', help='TransMorph Configuration') 
-#parser.add_argument('--seg_config', type=str, default='SMIT_config', help='SMIT Configuration')   
 parser.add_argument('--enc_nf', type=int, nargs='+', help='list of unet encoder filters (default: 16 32 32 32)')
 parser.add_argument('--dec_nf', type=int, nargs='+', help='list of unet decorder filters (default: 32 32 32 32 32 16 16)')
 parser.add_argument('--int-steps', type=int, default=7, help='number of integration steps (default: 7)')
