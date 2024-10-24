@@ -1,0 +1,1 @@
+This folder will contain the imagefiles folder that stores the images & also, a .json file as described in the main page.

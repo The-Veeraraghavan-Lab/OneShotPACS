@@ -50,7 +50,7 @@ parser.add_argument('--trans', default='0', help='Translation in voxel size to a
 parser.add_argument('--reg_model', type=str, default='VoxelMorph', help='TransMorph or VoxelMorph')
 parser.add_argument('--seg_model', type=str, default='CLSTM', help='SMIT or CLSTM')
 parser.add_argument('--gpu', default='0', help='GPU ID number(s), comma-separated (default: 0)')
-parser.add_argument('--batch-size', type=int, default=1, help='batch size (default: 1)')
+parser.add_argument('--batch_size', type=int, default=1, help='batch size (default: 1)')
 parser.add_argument('--reg_weights', default='saved_weights/0130_reg.pt',help='model file to initialize with')
 parser.add_argument('--seg_weights', default='saved_weights/sv_seg_model_cbct.pt',help='model file to initialize with')
 parser.add_argument('--cudnn-nondet',  action='store_true', help='disable cudnn determinism - might slow down training')
@@ -58,8 +58,8 @@ parser.add_argument('--cudnn-nondet',  action='store_true', help='disable cudnn 
 # network architecture parameters
 parser.add_argument('--enc_nf', type=int, nargs='+', help='list of unet encoder filters (default: 16 32 32 32)')
 parser.add_argument('--dec_nf', type=int, nargs='+', help='list of unet decorder filters (default: 32 32 32 32 32 16 16)')
-parser.add_argument('--int-steps', type=int, default=7, help='number of integration steps (default: 7)')
-parser.add_argument('--int-downsize', type=int, default=2, help='flow downsample factor for integration (default: 2)')
+parser.add_argument('--int_steps', type=int, default=7, help='number of integration steps (default: 7)')
+parser.add_argument('--int_downsize', type=int, default=2, help='flow downsample factor for integration (default: 2)')
 parser.add_argument('--bidir', action='store_true', help='enable bidirectional cost function')
 
 # for output
@@ -169,6 +169,9 @@ post_transforms_contour = transforms.Compose([
 ###############################################################################
 
 # Define the model and load the corresponding weights
+# unet architecture
+args.enc_nf = args.enc_nf if args.enc_nf else [16, 32, 32, 32]
+args.dec_nf = args.dec_nf if args.dec_nf else [32, 32, 32, 32, 32, 16, 16]
 
 if args.reg_model == 'VoxelMorph':
     reg_model = vxm.networks.VxmDense_3D_LSTM_Step_Reg_All_Encoder_LSTM(  

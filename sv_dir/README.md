@@ -1,0 +1,1 @@
+Downloaded weights from Box go inside the saved_weights folder here. Outputs from the run will also be saved here.
