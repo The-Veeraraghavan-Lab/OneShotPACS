@@ -230,10 +230,10 @@ with torch.no_grad(): # no grade calculation
 
         flow_in=torch.zeros(1, 3, cbct_val_img.size()[2], cbct_val_img.size()[3], cbct_val_img.size()[4]).cuda()
 
-        p_name = batch_data['cbct_meta_dict']['filename_or_obj'][0].split('/')[-1]
+        p_name = batch_data['cbct_meta_dict']['filename_or_obj'][0].split('/')[-2]
         #print(p_name)
-        p_name_id=p_name.split('_')#[-1]
-        p_name=p_name_id[0]+'_'+p_name_id[2]
+        #p_name_id=p_name.split('_')#[-1]
+        #p_name=p_name_id[0]+'_'+p_name_id[2]
         cur_folder=os.path.join(val_folder,p_name) + '/'
 
         sv_folder = os.path.join(val_folder,p_name)+'/'
