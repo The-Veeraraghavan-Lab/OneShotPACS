@@ -68,7 +68,6 @@ parser.add_argument('--val_dir', default='inference_170', help='model output dir
 parser.add_argument('--flownum', type=int, default=8, help='flow number (default: 8)')
 parser.add_argument('--data_dir', default='/lab/deasylab1/Jue/Others/CT_CBCT/Lung_data_cropped/Watershed3/', type=str, help='dataset directory')
 parser.add_argument('--json_list', default='PACs_testing.json', type=str, help='dataset json file') 
-parser.add_argument('--results_file', default='Inference_Results_130', help='Name of csv file') 
 parser.add_argument('--no_img_sv', action='store_true', help='Code will not save output images')
 
 
