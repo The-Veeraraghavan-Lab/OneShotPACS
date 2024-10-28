@@ -25,7 +25,7 @@
   —-a_min -500 —-a_max 500 —-b_min 0.0 —-b_max 1.0 \
   —-space_x 1.5 —-space_y 1.5 —-space_z 1.5 \
   —-roi_x 256 —-roi_y 256 —-roi_z 64 \
-  —-RandFlip_prob 0.45 —-RandRotate90d_prob 0.2 \
+  —-RandFlipd_prob 0.45 —-RandRotate90d_prob 0.2 \
   —-RandShiftIntensityd_prob 0.1 —-workers 1
   ```
 - For example, given the data used as example in this repository, the following python code should produce the CSV file located <a href="https://mskcc.box.com/s/x4ilt7xc69s47bu81zqynos39xj4r0zw">here</a> under `sv_dir/inference_190/CSVs/test_Results.csv`
@@ -39,7 +39,7 @@
   —-a_min -500 —-a_max 500 —-b_min 0.0 —-b_max 1.0 \
   —-space_x 1.5 —-space_y 1.5 —-space_z 1.5 \
   —-roi_x 256 —-roi_y 256 —-roi_z 64 \
-  —-RandFlip_prob 0.45 —-RandRotate90d_prob 0.2 \
+  —-RandFlipd_prob 0.45 —-RandRotate90d_prob 0.2 \
   —-RandShiftIntensityd_prob 0.1 —-workers 1
   ```
   
