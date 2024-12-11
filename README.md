@@ -6,7 +6,7 @@
 ## Prerequisites
 - Linux
 - Python 3.9
-- NVIDIA GPU with CUDA CuDNN
+- NVIDIA GPU with CUDA CuDNN (CUDA 11.8 or higher)
 
 ## To get started
 - Clone this repository
