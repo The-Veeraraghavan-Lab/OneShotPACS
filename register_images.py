@@ -83,7 +83,7 @@ def process_and_save(planning_ct, cbct, contours, planning_contours, output_dir)
 if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(description='UNETR segmentation pipeline')
-    parser.add_argument('--path_images', default='dataset/imagefiles/image_inst1')
+    parser.add_argument('--path_images', default='dataset/image_inst1')
     args = parser.parse_args()
     
     ct_folder = osp.join(args.path_images, 'ct')
