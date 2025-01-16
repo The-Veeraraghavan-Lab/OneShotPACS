@@ -13,7 +13,28 @@
 - Download the corresponding weights from <a href="https://mskcc.box.com/s/x4ilt7xc69s47bu81zqynos39xj4r0zw">here</a> and save them to `saved_weights` folder inside `sv_dir`
 - Install pytorch (our GPU is at CUDA 11.8, so we use the following command `pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https://download.pytorch.org/whl/cu118`)
 - Install the requirements using `pip install -r requirements.txt`
-- The data should be present in the `dataset` folder, with the json organizing each instance under `validation` key as the following template: cbct, cbct_msk, pct, pct_msk. Note, the code naturally assumes that the name of the image is the last piece of information in the json file. If this is not the case, edit <a href="https://github.com/The-Veeraraghavan-Lab/OneShotPACS/blob/4d3de5038a1151c24b0d9818458fe7e399cc435d/inference.py#L233">this line</a> under `inference.py` 
+- The data should be present in the `dataset` folder, with the json organizing each instance under `validation` key as the following template:
+  - datasets
+    - imagefiles
+      - image1
+        - ct
+          - image
+          - label
+        - cbct
+          - image(s)
+          - label(s)
+      - image2
+      - image3
+      - ...
+  
+- Note, the set of codes naturally assume that the name of the image is the last piece of information in the json file. If this is not the case, edit <a href="https://github.com/The-Veeraraghavan-Lab/OneShotPACS/blob/4d3de5038a1151c24b0d9818458fe7e399cc435d/inference.py#L233">this line</a> under `inference.py`
+- In addition, every image scan should end with `_image` and every manual delineation/auto-segmentation scan should end with `_label`. This can be changed for the registration code `register_images.py`, and for the rest of the workflow by simply adding the correct correspondence in the json file.
+- Run the registration script using
+  ```bash
+  python register_images.py
+  --path_images {path to image directory (image1, image2, ...)
+  ```
+  This will save the pre-processed registered data in the same image directory under the `aligned_data` folder. Note, this has already been run for the set of images given as examples in this page.
 - Run the script using
   ```bash
   python inference.py
