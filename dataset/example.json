@@ -3,8 +3,8 @@
     {
       "cbct": "imagefiles/image_inst1/cbct/cbct_image.nii.gz",
       "cbct_msk": "imagefiles/image_inst1/cbct/cbct_label.nii.gz",
-      "pct": "imagefiles/image_inst1/ct/ct_image.nii.gz",
-      "pct_msk": "imagefiles/image_inst1/ct/ct_label.nii.gz"
+      "pct": "imagefiles/image_inst1/ct/planct_image.nii.gz",
+      "pct_msk": "imagefiles/image_inst1/ct/planct_label.nii.gz"
     }
   ]
 }
