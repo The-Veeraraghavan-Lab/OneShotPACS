@@ -1,10 +1,10 @@
 {
   "validation": [
     {
-      "cbct": "imagefiles/image_inst1/cbct/cbct_image.nii.gz",
-      "cbct_msk": "imagefiles/image_inst1/cbct/cbct_label.nii.gz",
-      "pct": "imagefiles/image_inst1/ct/planct_image.nii.gz",
-      "pct_msk": "imagefiles/image_inst1/ct/planct_label.nii.gz"
+      "cbct": "image_inst1/aligned_data/cbct/cbct_image.nii.gz",
+      "cbct_msk": "image_inst1/aligned_data/cbct/cbct_label.nii.gz",
+      "pct": "image_inst1/aligned_data/ct/planct_image.nii.gz",
+      "pct_msk": "image_inst1/aligned_data/ct/planct_label.nii.gz"
     }
   ]
 }

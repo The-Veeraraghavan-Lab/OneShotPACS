@@ -32,7 +32,7 @@
 - Run the registration script using
   ```bash
   python register_images.py
-  --path_images {path to image directory (image1, image2, ...)
+  --path_images {path to image directory (image1, image2, ...)}
   ```
   This will save the pre-processed registered data in the same image directory under the `aligned_data` folder. Note, this has already been run for the set of images given as examples in this page.
 - Run the script using
