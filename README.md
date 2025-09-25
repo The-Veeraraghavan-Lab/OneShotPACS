@@ -10,7 +10,7 @@
 
 ## To get started
 - Clone this repository
-- Download the corresponding weights from <a href="https://mskcc.box.com/s/x4ilt7xc69s47bu81zqynos39xj4r0zw">here</a> and save them to `saved_weights` folder inside `sv_dir`
+- Download the corresponding weights from <a href="https://mskcc.box.com/s/bzdu41q3obdy0gb4ywf45o49w03ekdpg">here</a> and save them to `saved_weights` folder inside `sv_dir`
 - Install pytorch (our GPU is at CUDA 11.8, so we use the following command `pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https://download.pytorch.org/whl/cu118`)
 - Install the requirements using `pip install -r requirements.txt`
 - The data should be present in the `dataset` folder, with the json organizing each instance under `validation` key as the following template:
