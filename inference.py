@@ -42,66 +42,63 @@ from utils_metrics import Eval
 parser = argparse.ArgumentParser()
 
 # data organization parameters
+parser.add_argument('--data_dir', default='dataset', type=str, help='root directory cointaining the dataset and JSON lists.')
+parser.add_argument('--json_list', default='example.json', type=str, help='dataset json file listing cases.')
+parser.add_argument("--sv_dir", type=str, default="sv_dir", help='Root output directory for results, metrics, and NIfTI saves.')
+parser.add_argument("--val_dir", type=str, default="inference_190", help='Subdirectory under --sv_dir for current run’s outputs.')
+
+# models and weights
+parser.add_argument('--reg_model', type=str, default="VoxelMorph", choices=["VoxelMorph"],
+                help='Registration model (Only VoxelMorph is supported).')
+parser.add_argument('--reg_weights', type=str, default='saved_weights/0190_reg.pt'
+                help='Path (relative to --sv_dir) to registration model weights.')
+parser.add_argument('--seg_model', type=str, default="CLSTM", choices=["CLSTM", "none"],
+                help='Segmentation head (Use 'none' to disable segmentation).')
+parser.add_argument('--seg_weights', default='saved_weights/0190_seg.pt',
+                help='Path (relative to --sv_dir) to segmentation model weights.')
+
+# registration model hyperparameters
+parser.add_argument('--enc_nf', type=int, nargs='+', help='list of unet encoder filters (default: 16 32 32 32).')
+parser.add_argument('--dec_nf', type=int, nargs='+', help='list of unet decorder filters (default: 32 32 32 32 32 16 16).')
+parser.add_argument('--int_steps', type=int, default=7, help='number of integration steps (default: 7).')
+parser.add_argument('--int_downsize', type=int, default=2, help='flow downsample factor for integration (default: 2).')
+parser.add_argument('--bidir', action='store_true', help='enable bidirectional cost function.')
+parser.add_argument('--flownum', type=int, default=8, help='flow number (default: 8)'.)
+
+# preprocessing parameters
+parser.add_argument('--a_min', default=-500, type=float, help='a_min in ScaleIntensityRanged.')
+parser.add_argument('--a_max', default=500, type=float, help='a_max in ScaleIntensityRanged.')
+parser.add_argument('--b_min', default=0.0, type=float, help='b_min in ScaleIntensityRanged.')
+parser.add_argument('--b_max', default=1.0, type=float, help='b_max in ScaleIntensityRanged.')
+parser.add_argument('--space_x', default=1.5, type=float, help='spacing in x direction.')
+parser.add_argument('--space_y', default=1.5, type=float, help='spacing in y direction.')
+parser.add_argument('--space_z', default=1.5, type=float, help='spacing in z direction.')
+parser.add_argument('--roi_x', default=256, type=int, help='roi size in x direction.')
+parser.add_argument('--roi_y', default=256, type=int, help='roi size in y direction.')
+parser.add_argument('--roi_z', default=64, type=int, help='roi size in z direction.')
+
+# others
+parser.add_argument('--gpu', default='0', help='GPU ID number(s), comma-separated (default: 0)')
+parser.add_argument('--workers', default=1, type=int, help='number of workers')
+parser.add_argument('--cudnn-nondet',  action='store_true', help='disable cudnn determinism - might slow down training')
+parser.add_argument('--batch_size', type=int, default=1, help='batch size (default: 1)')
+parser.add_argument('--no_img_sv', action='store_true', help='Code will not save output images')
 parser.add_argument('--affine', action='store_true', help='Add Affine rotations to the input images')
 parser.add_argument('--rotate', default='0.0', help='Rotation in degrees to apply to affine transform')
 parser.add_argument('--trans', default='0', help='Translation in voxel size to apply to affine transform')
 
-# training parameters
-parser.add_argument('--reg_model', type=str, default='VoxelMorph', help='TransMorph or VoxelMorph')
-parser.add_argument('--seg_model', type=str, default='CLSTM', help='SMIT or CLSTM')
-parser.add_argument('--gpu', default='0', help='GPU ID number(s), comma-separated (default: 0)')
-parser.add_argument('--batch_size', type=int, default=1, help='batch size (default: 1)')
-parser.add_argument('--reg_weights', default='saved_weights/0130_reg.pt',help='model file to initialize with')
-parser.add_argument('--seg_weights', default='saved_weights/sv_seg_model_cbct.pt',help='model file to initialize with')
-parser.add_argument('--cudnn-nondet',  action='store_true', help='disable cudnn determinism - might slow down training')
-
-# network architecture parameters
-parser.add_argument('--enc_nf', type=int, nargs='+', help='list of unet encoder filters (default: 16 32 32 32)')
-parser.add_argument('--dec_nf', type=int, nargs='+', help='list of unet decorder filters (default: 32 32 32 32 32 16 16)')
-parser.add_argument('--int_steps', type=int, default=7, help='number of integration steps (default: 7)')
-parser.add_argument('--int_downsize', type=int, default=2, help='flow downsample factor for integration (default: 2)')
-parser.add_argument('--bidir', action='store_true', help='enable bidirectional cost function')
-
-# for output
-parser.add_argument('--sv_dir', default='Nishant_PACs_full_256_256_64_mse_affine_smooth_10', help='model output directory (default: models)')
-parser.add_argument('--val_dir', default='inference_170', help='model output directory (default: models)')
-parser.add_argument('--flownum', type=int, default=8, help='flow number (default: 8)')
-parser.add_argument('--data_dir', default='/lab/deasylab1/Jue/Others/CT_CBCT/Lung_data_cropped/Watershed3/', type=str, help='dataset directory')
-parser.add_argument('--json_list', default='PACs_testing.json', type=str, help='dataset json file') 
-parser.add_argument('--no_img_sv', action='store_true', help='Code will not save output images')
-
-
-
-
-
-parser.add_argument('--a_min', default=-500, type=float, help='a_min in ScaleIntensityRanged')
-parser.add_argument('--a_max', default=500, type=float, help='a_max in ScaleIntensityRanged')
-parser.add_argument('--b_min', default=0.0, type=float, help='b_min in ScaleIntensityRanged')
-parser.add_argument('--b_max', default=1.0, type=float, help='b_max in ScaleIntensityRanged')
-parser.add_argument('--space_x', default=1.5, type=float, help='spacing in x direction')
-parser.add_argument('--space_y', default=1.5, type=float, help='spacing in y direction')
-parser.add_argument('--space_z', default=1.5, type=float, help='spacing in z direction')
-parser.add_argument('--roi_x', default=256, type=int, help='roi size in x direction')
-parser.add_argument('--roi_y', default=256, type=int, help='roi size in y direction')
-parser.add_argument('--roi_z', default=64, type=int, help='roi size in z direction')
-parser.add_argument('--RandFlipd_prob', default=0.45, type=float, help='RandFlipd aug probability')
-parser.add_argument('--RandRotate90d_prob', default=0.2, type=float, help='RandRotate90d aug probability')
-parser.add_argument('--RandShiftIntensityd_prob', default=0.1, type=float, help='RandShiftIntensityd aug probability')
-parser.add_argument('--workers', default=1, type=int, help='number of workers')
-
 args = parser.parse_args()
 print (args)
 
-os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
 # device handling
-gpus = args.gpu.split(',')
-nb_gpus = len(gpus)
-device = 'cuda'
-assert args.batch_size >= nb_gpus, 'Batch size (%d) should be no less than the number of gpus (%d)' % (args.batch_size, nb_gpus)
-#Why?
+if torch.cuda.is_available():
+    os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(device)
 
 # enabling cudnn determinism appears to speed up training by a lot
 torch.backends.cudnn.deterministic = not args.cudnn_nondet
+torch.backends.cudnn.benchmark     = args.cudnn_nondet
 
 # Load the dataset
 datalist_json = os.path.join(args.data_dir, args.json_list)
@@ -114,7 +111,7 @@ test_files = load_decathlon_datalist(datalist_json,
 
 val_transform = get_val_transforms_base(args)
 val_org_ds = data.Dataset(data=test_files, transform=val_transform)
-val_org_loader = data.DataLoader(val_org_ds, batch_size=1, num_workers=args.workers)
+val_org_loader = data.DataLoader(val_org_ds, batch_size=args.batch_size, num_workers=args.workers, pin_memory=(device.type == 'cuda'))
 
 print('val data size is ',len(val_org_loader))
 
@@ -172,6 +169,8 @@ post_transforms_contour = transforms.Compose([
 args.enc_nf = args.enc_nf if args.enc_nf else [16, 32, 32, 32]
 args.dec_nf = args.dec_nf if args.dec_nf else [32, 32, 32, 32, 32, 16, 16]
 
+# Define registration model -------------
+
 if args.reg_model == 'VoxelMorph':
     reg_model = vxm.networks.VxmDense_3D_LSTM_Step_Reg_All_Encoder_LSTM(  
         inshape=(args.roi_x, args.roi_y, args.roi_z),
@@ -184,33 +183,40 @@ if args.reg_model == 'VoxelMorph':
 else:
     raise NotImplementedError("Only VoxelMorph is supported at this time.")
 
-if args.seg_model == None:
-    print("Not using segmentation")
-elif args.seg_model == 'CLSTM':
-    seg_model = vxm.networks.UNet3D_Seg_LSTM(in_channels=3,out_channels=2+1,final_sigmoid=False)
-else:
-    raise NotImplementedError("Only CLSTM is supported at this time.")
-
 reg_model_path = os.path.join(args.sv_dir, args.reg_weights)
-
-if args.seg_model is not None:  
-    seg_model_path = os.path.join(args.sv_dir, args.seg_weights)   
-
+if not os.path.isfile(reg_model_path):
+    raise FileNotFoundError(f"Registration weights not found at {reg_model_path}")
 reg_model.load_state_dict(torch.load(reg_model_path, map_location="cpu"))
-reg_model.eval()
 reg_model.to(device)
+reg_model.eval()
 
-if args.seg_model != None:
-    seg_model.load_state_dict(torch.load(seg_model_path, map_location="cpu")['model_state_dict'])
-    seg_model.eval()
+# Done defining registration model -------------
+
+# Define segmentation model -------------
+use_seg = (args.seg_model is not None) and (str(args.seg_model).lower() != 'none')
+
+if use_seg:
+    if args.seg_model == 'CLSTM':
+        seg_model = vxm.networks.UNet3D_Seg_LSTM(in_channels=3,out_channels=2+1,final_sigmoid=False)
+    else:
+        raise NotImplementedError("Only CLSTM is supported at this time.")
+
+    seg_model_path = os.path.join(args.sv_dir, args.seg_weights)
+    if not os.path.isfile(seg_model_path):
+        raise FileNotFoundError(f"Segmentation weights not found at {seg_model_path}")
+
+    seg_ckpt = torch.load(seg_model_path, map_location="cpu")
+    seg_state = seg_ckpt.get('model_state_dict', seg_ckpt)
+    seg_model.load_state_dict(seg_state)
     seg_model.to(device)
+    seg_model.eval()
+else:
+    print("Not using segmentation")
         
-###############################################################################
+# Done defining segmentation model -------------
+
 
 ###############################################################################
-###############################################################################
-###############################################################################
-
 
 val_folder = os.path.join(args.sv_dir, args.val_dir) 
 
@@ -220,52 +226,44 @@ with torch.no_grad(): # no grade calculation
 
     for i_iter_val, batch_data in enumerate(val_org_loader):    
                             
-        plan_ct_img,planct_val_msk,cbct_val_img,cbct_val_msk=batch_data['pct'], batch_data['pct_msk'],batch_data['cbct'], batch_data['cbct_msk']
+        plan_ct_img, planct_val_msk = batch_data['pct'].float().to(device), batch_data['pct_msk'].float().to(device)
+        cbct_val_img, cbct_val_msk = batch_data['cbct'].float().to(device), batch_data['cbct_msk'].float().to(device)
 
-        cbct_val_img=cbct_val_img.float().cuda()
-        cbct_val_msk=cbct_val_msk.float().cuda()
-        plan_ct_img=plan_ct_img.float().cuda()
-        planct_val_msk=planct_val_msk.float().cuda()
-
-        flow_in=torch.zeros(1, 3, cbct_val_img.size()[2], cbct_val_img.size()[3], cbct_val_img.size()[4]).cuda()
+        flow_in=torch.zeros(args.batch_size, 3, cbct_val_img.size()[2], cbct_val_img.size()[3], cbct_val_img.size()[4]).to(device)
 
         p_name = batch_data['cbct_meta_dict']['filename_or_obj'][0].split('/')[-2]
-        #print(p_name)
-        #p_name_id=p_name.split('_')#[-1]
-        #p_name=p_name_id[0]+'_'+p_name_id[2]
+        print(p_name)
+        
         cur_folder=os.path.join(val_folder,p_name) + '/'
-
         sv_folder = os.path.join(val_folder,p_name)+'/'
+
         if not args.no_img_sv:
             if not os.path.exists(sv_folder):
-                os.makedirs(sv_folder)
+                os.makedirs(sv_folder, exist_ok=True)
         else:
             sv_folder = 'None'
         
-        # Core code
-        # Flow num can be adjusted to get more or less deformation
-        for seg_iter_val in range (0,args.flownum):
-            
-            if seg_iter_val==0:
-                h=None
-                c=None
-                y_pred_val,y_m_pred_val,dvf_flow,h,c= reg_model.forward_seg_training_all_enc_lstm_accu_dvf(plan_ct_img,cbct_val_img,planct_val_msk,h,c,flow_in,plan_ct_img,planct_val_msk)
+        # recurrent states
+        h = c = None
+        state_seg = None
+
+        # core iterative registration/seg
+        for seg_iter_val in range(args.flownum):
+            if seg_iter_val == 0:
+                y_pred_val, y_m_pred_val, dvf_flow, h, c = reg_model.forward_seg_training_all_enc_lstm_accu_dvf(
+                    plan_ct_img, cbct_val_img, planct_val_msk, h, c, flow_in, plan_ct_img, planct_val_msk
+                )
             else:
-                y_pred_val,y_m_pred_val,dvf_flow ,h,c= reg_model.forward_seg_training_all_enc_lstm_accu_dvf(y_pred_val,cbct_val_img,y_m_pred_val,h,c,dvf_flow,plan_ct_img,planct_val_msk) 
-                
-            if args.seg_model is not None:
-                if seg_iter_val == 0:
-                    state_seg=None
-                    
-                # Preparing segmentation input using deformed moving mask
-                seg_in_val = torch.cat((cbct_val_img,y_pred_val),1)
-                seg_in_val = torch.cat((seg_in_val,y_m_pred_val),1)
-    
-                seg_result,h_seg,c_seg=seg_model(seg_in_val,state_seg)
-    
-                state_seg=[h_seg,c_seg]
-    
-                seg_result=torch.argmax(seg_result, dim=1)
+                y_pred_val, y_m_pred_val, dvf_flow, h, c = reg_model.forward_seg_training_all_enc_lstm_accu_dvf(
+                    y_pred_val, cbct_val_img, y_m_pred_val, h, c, dvf_flow, plan_ct_img, planct_val_msk
+                )
+ 
+            if args.seg_model is not None:                    
+                # seg input: [cbct, deformed_moving_img, deformed_moving_mask]
+                seg_in_val = torch.cat((cbct_val_img, y_pred_val, y_m_pred_val), dim=1)
+                seg_logits, h_seg, c_seg = seg_model(seg_in_val, state_seg)
+                state_seg = [h_seg, c_seg]
+                seg_result = torch.argmax(seg_logits, dim=1)
 
         # Loading reference image
         pct_path = batch_data['pct_meta_dict']['filename_or_obj'][0]
@@ -389,6 +387,3 @@ with torch.no_grad(): # no grade calculation
                 save_img = copy_info(pct_ref, save_img)
                 save_path = sv_folder+'cbct_seg_msk.nii'
                 sitk.WriteImage(save_img, save_path)
-        
-            
-                    
