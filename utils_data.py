@@ -82,42 +82,6 @@ def get_val_transforms_base(args):
     
     return val_transform
 
-def get_val_transforms_affine(args):
-    rotate = args.rotate * 3.141592 / 180
-    val_transform = transforms.Compose(
-        [
-            transforms.LoadImaged(keys=["pct", "pct_msk", "cbct", "cbct_msk"]),
-            transforms.AddChanneld(keys=["pct", "pct_msk", "cbct", "cbct_msk"]),
-            transforms.Orientationd(keys=["pct", "pct_msk", "cbct", "cbct_msk"],
-                                    axcodes="RAS"),
-
-            transforms.Spacingd(keys=["pct", "pct_msk", "cbct", "cbct_msk"],
-                                pixdim=(args.space_x, args.space_y, args.space_z),
-                                mode=("bilinear", "nearest","bilinear", "nearest")),
-           
-            transforms.ScaleIntensityRanged(keys=["pct","cbct"],
-                                            a_min=args.a_min,
-                                            a_max=args.a_max,
-                                            b_min=args.b_min,
-                                            b_max=args.b_max,
-                                            clip=True),
-            
-             transforms.Affined(keys=["pct","pct_msk"],
-                                           rotate_params=(0,0,rotate),
-                                           translate_params=(0,0,args.trans),
-                                           mode = ("bilinear", "nearest"),
-                                           padding_mode  = 'zeros'
-                                        ),
-             
-            transforms.SpatialPadd(keys=["pct", "pct_msk", "cbct", "cbct_msk"], spatial_size=(args.roi_x, args.roi_y, args.roi_z)),
-            transforms.ToTensord(keys=["pct", "pct_msk", "cbct", "cbct_msk"]),
-        ]
-    )
-
-    
-    return val_transform
-
-
 def copy_info(src, dst):
     dst.SetSpacing(src.GetSpacing())
     dst.SetOrigin(src.GetOrigin())
