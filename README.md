@@ -1,13 +1,21 @@
-### Project Page: One-Shot PACS
+# One-Shot PACS
 ### Patient specific Anatomic Context and Shape prior aware recurrent registration-segmentation of longitudinal thoracic cone beam CTs 
 
-<img src="imgs/figure.png" width="1200px"/>
+<img src="imgs/figure.png" width="100%"/>
+
+---
+
+## 📌 Overview
+This repository provides the official implementation of **One-Shot PACS** [[Jiang & Veeraraghavan, *IEEE TMI 2022*](https://arxiv.org/pdf/2201.11000)], a recurrent registration–segmentation framework for longitudinal thoracic CBCTs with patient-specific anatomical context and shape priors.
+
+---
 
 ## Prerequisites
 - Linux
 - Python 3.9
 - NVIDIA GPU with CUDA CuDNN (CUDA 11.8 or higher)
 
+---
 ## To get started
 - Clone this repository
 - Download the corresponding weights from <a href="https://mskcc.box.com/s/bzdu41q3obdy0gb4ywf45o49w03ekdpg">here</a> and save them to `saved_weights` folder inside `sv_dir`
