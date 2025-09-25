@@ -111,8 +111,6 @@ class Eval:
     def calculate_results(self, info, spacing, gt, rigid_msk = None, reg_result = None, seg_result = None, dvf = None):
         gt = gt.float().cpu().numpy()
         
-        
-        
         if reg_result != None:
             reg_result=reg_result.float().cpu().numpy()
             rigid_msk = rigid_msk.float().cpu().numpy()
@@ -217,60 +215,3 @@ class Eval:
         self.avg_df.to_csv(os.path.join(self.sv_dir, 'CSVs', self.mode+'Mean_Results.csv'),index=False)
 
         return info
-
-# class One_Hot(nn.Module):
-#     def __init__(self, depth):
-#         super(One_Hot, self).__init__()
-#         self.depth = depth
-#         self.ones = torch.eye(depth).cuda()
-
-#     def forward(self, X_in):
-#         n_dim = X_in.dim()
-#         output_size = X_in.size() + torch.Size([self.depth])
-#         num_element = X_in.numel()
-#         X_in = X_in.data.long().view(num_element)
-#         out = Variable(self.ones.index_select(0, X_in)).view(output_size)
-#         return out.permute(0, -1, *range(1, n_dim)).squeeze(dim=2).float()
-
-#     def __repr__(self):
-#         return self.__class__.__name__ + "({})".format(self.depth)
-
-
-# class DiceLoss_test(nn.Module):
-#     def __init__(self,num_organ=2):
-#         super(DiceLoss_test, self).__init__()
-#         self.num_organ=num_organ
-        
-#     def forward(self, pred_stage1, target):
-#         """
-#         :param pred_stage1: (B, 9,  256, 256)
-#         :param pred_stage2: (B, 9, 256, 256)
-#         :param target: (B, 256, 256)
-#         :return: Dice
-#         """
-#         pred_stage1 = F.softmax(pred_stage1, dim=1)
-#         # 
-#         #[b,12,256,256]
-#         organ_target = torch.zeros((target.size(0), self.num_organ,  256, 256,target.size(3)))
-#         #print (organ_target.size())
-#         #[0-11] 
-#         for organ_index in range(0, self.num_organ):
-#             temp_target = torch.zeros(target.size())
-#             temp_target[target == organ_index] = 1
-#             organ_target[:, organ_index, :, :,:] = torch.squeeze(temp_target)
-
-#         organ_target = organ_target.cuda()
-
-#         # loss
-#         dice_stage1 = 0.0
-
-#         for organ_index in range(0, self.num_organ ):
-#             dice_stage1 += 2 * (pred_stage1[:, organ_index, :, :,:] * organ_target[:, organ_index , :, :,:]).sum(dim=1).sum(dim=1) \
-#                 / (pred_stage1[:, organ_index, :, :,:].pow(2).sum(dim=1).sum(dim=1) + \
-#                    organ_target[:, organ_index, :, :,:].pow(2).sum(dim=1).sum(dim=1) + 1e-5)
-
-#         dice_stage1 /= self.num_organ
-
-#         dice = dice_stage1 
-
-#         return (1 - dice).mean()
