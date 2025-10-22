@@ -310,29 +310,6 @@ with torch.no_grad(): # no grade calculation
     
             batch_data_msk_def = [post_transforms_contour(i) for i in decollate_batch(batch_data)] 
             seg_result = from_engine(["pred_m"])(batch_data_msk_def)[0] 
-
-            ## Removing excess labelling in segemntation label
-            num = [750, 4000] #$ Hard-coded for now to assume values for esophagus and GTV
-            
-            temp_array = torch.zeros_like(torch.squeeze(seg_result))
-            
-            for i in range(1,3):
-                temp = np.squeeze(np.copy(seg_result))
-                temp[temp!=i] = 0
-                # print(np.unique(temp,return_counts=True))
-                pred_mask_lesion, num_predicted = label_connected_components(temp,structure=generate_binary_structure(3, 3),output=np.int16)
-                component_counts = np.bincount(pred_mask_lesion.flatten())
-                # print("Seg Count")
-                # print(component_counts)
-                valid_components = np.where(component_counts > num[i-1])[0]
-                
-                pred_volume2 = np.where(np.isin(pred_mask_lesion, valid_components), pred_mask_lesion, 0)
-    
-                pred_mask_lesion, num_predicted = label_connected_components(pred_volume2, structure=generate_binary_structure(3, 3),output=np.int16)
-                # if len(np.unique(pred_mask_lesion)) > :
-                temp_array[torch.from_numpy(pred_mask_lesion)==1] = i
-            seg_result = temp_array
-            
             eval.calculate_results(info, spacing, cbct_val_msk, planct_val_msk, y_m_pred_val, seg_result, dvf_flow)
         else:
             eval.calculate_results(info, spacing, cbct_val_msk, planct_val_msk, y_m_pred_val, None, dvf_flow)
