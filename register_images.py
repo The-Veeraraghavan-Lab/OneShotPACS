@@ -67,7 +67,7 @@ def process_and_save(planning_ct, planning_contours, cbct, contours, output_dir)
 
         # Apply the same transformation as CBCT
         contour_registered = ants.apply_transforms(fixed=planning_ct, moving=contour_resampled,
-                                                   transformlist=cbct_registered['fwdtransforms'])
+                                                   transformlist=cbct_registered['fwdtransforms'], interpolator='nearestNeighbor')
 
         print(f'Shape of registered contour: {contour_registered["warpedmovout"].shape}')
 
