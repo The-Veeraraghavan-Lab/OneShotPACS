@@ -37,7 +37,7 @@ pip install -r requirements.txt
 
 #### 3. Download the pretrained weights
 
-Download the pretrained weights from [MSKCC Box](https://mskcc.box.com/s/mpr3oiye1dv11xx7dkci6lf7w843ma9o)  and and save them to `saved_weights` folder inside `sv_dir`
+Download the pretrained weights from [MSKCC Box](https://mskcc.box.com/s/2gb0kxb7k6rdsftinodzxd5gahujve55) and and save them to `saved_weights` folder inside `sv_dir`
 
 #### 4. Data organization
 
